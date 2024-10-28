@@ -7,5 +7,4 @@ package-lock.json
 test/*
 postinstall.js
 tools/picker/src/*
-cypress/
 tools/pdp-metadata/*

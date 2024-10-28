@@ -10,4 +10,3 @@ scripts/commerce-events-collector.js
 scripts/commerce-events-sdk.js
 scripts/widgets
 plugins/
-cypress/

@@ -101,6 +101,11 @@ export default class Carousel extends Component {
   render() {
     this.getImages();
 
+    if (!this.images || !this.thumbnailImages) {
+      this.images = [`${window.origin}/${this.props.productImageFolder}/${this.props.sku}.jpg`];
+      this.thumbnailImages = [];
+    }
+
     return html`
         <div class="product-detail-carousel">
             <div class="carousel-thumbnails-wrapper">
