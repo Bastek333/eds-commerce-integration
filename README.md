@@ -1,10 +1,13 @@
 # Edge Delivery Services + Adobe Commerce Boilerplate
+
 This project boilerplate is for Edge Delivery Services projects that integrate with Adobe Commerce.
 
 ## Documentation
+
 https://experienceleague.adobe.com/developer/commerce/storefront/
 
 ## Environments
+
 - Preview: https://main--{repo}--{owner}.aem.page/
 - Live: https://main--{repo}--{owner}.aem.live/
 
@@ -34,3 +37,5 @@ npm run lint
 Major changes are described and documented as part of pull requests and tracked via the `changelog` tag. To keep your project up to date, please follow this list:
 
 https://github.com/hlxsites/aem-boilerplate-commerce/issues?q=label%3Achangelog+is%3Aclosed
+
+npm install @dropins/tools @dropins/storefront-cart @dropins/storefront-checkout @dropins/storefront-auth @dropins/storefront-account @dropins/storefront-order @dropins/storefront-order-confirmation @dropins/storefront-pdp --save

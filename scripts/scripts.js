@@ -145,11 +145,11 @@ async function loadEager(doc) {
     const sku = getSkuFromUrl();
     window.getProductPromise = getProduct(sku);
 
-    preloadFile('/scripts/__dropins__/storefront-pdp/containers/ProductDetails.js', 'script');
-    preloadFile('/scripts/__dropins__/storefront-pdp/api.js', 'script');
-    preloadFile('/scripts/__dropins__/storefront-pdp/render.js', 'script');
-    preloadFile('/scripts/__dropins__/storefront-pdp/chunks/initialize.js', 'script');
-    preloadFile('/scripts/__dropins__/storefront-pdp/chunks/getRefinedProduct.js', 'script');
+    preloadFile('/node_modules/@dropins/storefront-pdp/containers/ProductDetails.js', 'script');
+    preloadFile('/node_modules/@dropins/storefront-pdp/api.js', 'script');
+    preloadFile('/node_modules/@dropins/storefront-pdp/render.js', 'script');
+    preloadFile('/node_modules/@dropins/storefront-pdp/chunks/initialize.js', 'script');
+    preloadFile('/node_modules/@dropins/storefront-pdp/chunks/getRefinedProduct.js', 'script');
   } else if (document.body.querySelector('main .product-details-custom')) {
     pageType = 'Product';
     preloadFile('/scripts/preact.js', 'script');
