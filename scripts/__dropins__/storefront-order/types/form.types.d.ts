@@ -26,15 +26,15 @@ export interface FieldsProps {
     code: string;
     name: string;
     defaultValue: string | boolean | number;
-    entity_type: string;
+    entityType: string;
     required: boolean;
     is_unique: boolean;
     label: string;
     orderNumber: number;
-    options: {
-        is_default: boolean;
-        label: string;
-        value: string;
+    options?: {
+        is_default?: boolean;
+        label?: string;
+        value?: string;
     }[];
 }
 export interface FormProps {

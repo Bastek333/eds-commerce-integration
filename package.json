@@ -23,24 +23,24 @@
   },
   "homepage": "https://github.com/adobe/aem-boilerplate#readme",
   "devDependencies": {
-    "@adobe/aem-cli": "^16.5.8",
+    "@adobe/aem-cli": "^16.7.22",
     "@babel/eslint-parser": "7.25.9",
-    "eslint": "8.57.1",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.31.0",
     "stylelint": "16.10.0",
     "stylelint-config-standard": "36.0.1"
   },
   "dependencies": {
-    "@adobe/magento-storefront-event-collector": "^1.8.0",
-    "@adobe/magento-storefront-events-sdk": "^1.8.0",
-    "@dropins/storefront-account": "^0.1.0-alpha2",
+    "@adobe/magento-storefront-event-collector": "^1.12.0",
+    "@adobe/magento-storefront-events-sdk": "^1.12.0",
+    "@dropins/storefront-account": "^0.1.0-alpha19",
     "@dropins/storefront-auth": "^0.0.1-alpha4",
-    "@dropins/storefront-cart": "^0.8.0",
+    "@dropins/storefront-cart": "^0.10.0",
     "@dropins/storefront-checkout": "^0.1.0-alpha52",
-    "@dropins/storefront-order": "^0.1.0-alpha3",
+    "@dropins/storefront-order": "^0.1.0-alpha19",
     "@dropins/storefront-order-confirmation": "^0.1.0-alpha33",
     "@dropins/storefront-pdp": "^0.4.0",
-    "@dropins/tools": "^0.33.0"
+    "@dropins/tools": "^0.35.0"
   }
 }
