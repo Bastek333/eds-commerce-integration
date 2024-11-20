@@ -24,6 +24,10 @@ class Store {
     total_quantity: 0,
   };
 
+  // additional cookie for cart dropin
+  static CART_COOKIE = 'DROPIN__CART__CART-ID';
+
+
   static getCartId() {
     const cartIdField = window.localStorage.getItem(Store.CARTID_STORE);
     if (!cartIdField) {
@@ -43,6 +47,8 @@ class Store {
       value: `"${cartId}"`,
       timeStored: Date.now(),
     }));
+    // additional cookie for cart dropin
+    this.setCookie(Store.CART_COOKIE, cartId);
   }
 
   static getCookie(key) {

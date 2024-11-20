@@ -35,12 +35,6 @@ export default async function decorate(block) {
       displayMode: '', // "" for plp || "PAGE" for category/catalog
       addToCart: async (...args) => {
         const { cartApi } = await import('../../scripts/minicart/api.js');
-        const product = { sku: args[0], quantity: args[2] };
-        console.log('add to cart new', product);
-        // await createEmptyCart();
-        // await initializeCart();
-        addProductsToCart([product]);
-        console.log('add to cart old', args);
         return cartApi.addToCart(...args);
       },
     },

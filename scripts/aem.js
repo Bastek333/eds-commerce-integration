@@ -100,10 +100,14 @@ function sampleRUM(checkpoint, data) {
         sampleRUM.enhance = () => {
           // only enhance once
           if (document.querySelector('script[src*="rum-enhancer"]')) return;
-
+          const { enhancerVersion, enhancerHash } = sampleRUM.enhancerContext || {};
           const script = document.createElement('script');
+          if (enhancerHash) {
+            script.integrity = enhancerHash;
+            script.setAttribute('crossorigin', 'anonymous');
+          }
           script.src = new URL(
-            '.rum/@adobe/helix-rum-enhancer@^2/src/index.js',
+            `.rum/@adobe/helix-rum-enhancer@${enhancerVersion || '^2'}/src/index.js`,
             sampleRUM.baseURL,
           ).href;
           document.head.appendChild(script);
@@ -511,11 +515,17 @@ async function fetchPlaceholders(prefix = 'default') {
         })
         .then((json) => {
           const placeholders = {};
-          json.data
-            .filter((placeholder) => placeholder.Key)
-            .forEach((placeholder) => {
-              placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
-            });
+          json.data.forEach(({ Key, Value }) => {
+            if (Key) {
+              const keys = Key.split('.');
+              const lastKey = keys.pop();
+              const target = keys.reduce((obj, key) => {
+                obj[key] = obj[key] || {};
+                return obj[key];
+              }, placeholders);
+              target[lastKey] = Value;
+            }
+          });
           window.placeholders[prefix] = placeholders;
           resolve(window.placeholders[prefix]);
         })

@@ -43,16 +43,16 @@ pkg.setFetchGraphQlHeaders({
   'x-api-key': await getConfigValue('commerce-x-api-key'),
 }); */
 
-export default function decorate(block) {
+export default async function decorate(block) {
   const config = readBlockConfig(block);
 
-  console.log('store pkg', pkg.initializeCart());
+  // console.log('store pkg', pkg.initializeCart());
 
-  console.log('block config', config);
-  // console.log('store id', pkg.getCartData());
-  console.log('store config', pkg.getConfig());
-  console.log('store config cache', pkg.getCartDataFromCache());
-  console.log('store pkg', pkg);
+  // console.log('block config', config);
+  // console.log('store cartdata', await pkg.getCartData());
+  // .log('store config', await pkg.getConfig());
+  // .log('store config cache', await pkg.getCartDataFromCache());
+  // console.log('store pkg', await pkg);
 
   /*   console.log('dropin cart data', getCartData());
   console.log('dropin store config', getStoreConfig());
@@ -61,17 +61,11 @@ export default function decorate(block) {
   // const cartData = pkg.getCartData();
 
   // console.log('cart data', cartData);
+  await pkg.initializeCart();
 
   provider.render(Cart, {
     routeProduct: (item) => `${item.url.categories.join('/')}/${item.url.urlKey}`,
     routeEmptyCartCTA: () => '/',
     routeCheckout: () => '/checkout',
   })(block);
-
-/*   provider.render(MiniCart, {
-    routeProduct: (item) => `${item.url.categories.join('/')}/${item.url.urlKey}`,
-    routeEmptyCartCTA: () => '/',
-    routeCart: () => '/cart',
-    routeCheckout: () => '/checkout',
-  })(block); */
 }
