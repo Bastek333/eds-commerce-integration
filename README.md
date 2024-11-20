@@ -38,4 +38,27 @@ Major changes are described and documented as part of pull requests and tracked 
 
 https://github.com/hlxsites/aem-boilerplate-commerce/issues?q=label%3Achangelog+is%3Aclosed
 
+## SII research
+
+To use dropiins Magento version should be at least 2.4.7
+
 npm install @dropins/tools @dropins/storefront-cart @dropins/storefront-checkout @dropins/storefront-auth @dropins/storefront-account @dropins/storefront-order @dropins/storefront-order-confirmation @dropins/storefront-pdp --save
+
+head.html
+
+<script type="importmap">
+    {
+        "imports": {
+            "@dropins/tools/": "/scripts/__dropins__/tools/",
+            "@dropins/storefront-pdp/": "/scripts/__dropins__/storefront-pdp/",
+            "@dropins/storefront-cart/": "/scripts/__dropins__/storefront-cart/",
+            "@dropins/storefront-checkout/": "/scripts/__dropins__/storefront-checkout/",
+            "@dropins/storefront-auth/": "/scripts/__dropins__/storefront-auth/",
+            "@dropins/storefront-account/": "/scripts/__dropins__/storefront-account/",
+            "@dropins/storefront-order/": "/scripts/__dropins__/storefront-order/",
+            "@dropins/storefront-order-confirmation/": "/scripts/__dropins__/storefront-order-confirmation/"
+        }
+    }
+</script>
+
+npm outdated - check for new packages (change package number to \* and run npm update --save)

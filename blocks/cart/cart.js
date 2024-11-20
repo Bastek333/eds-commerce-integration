@@ -3,6 +3,7 @@
 
 // Dropin Tools
 // import { initializers } from '@dropins/tools/initializer.js';
+// import { initializers } from '@dropins/tools/initializer.js';
 
 // Dropin Functions
 import * as pkg from '@dropins/storefront-cart/api.js';
@@ -17,13 +18,19 @@ import MiniCart from '@dropins/storefront-cart/containers/MiniCart.js';
 import { store } from '../../scripts/minicart/api.js'; */
 
 import { readBlockConfig } from '../../scripts/aem.js';
-import { getConfigValue } from '../../scripts/configs.js';
+// import { getConfigValue } from '../../scripts/configs.js';
 
 // Register and load the Cart dropin
 // initializers.register(pkg.initialize);
 
+// Initialize Dropins
+// initializers.register(pkg.initialize);
+
+// window.addEventListener('load', initializers.mount);
+
 // Set Fetch Endpoint (Service)
-pkg.setEndpoint(await getConfigValue('commerce-endpoint'));
+/* mesh.setEndpoint(await getConfigValue('commerce-endpoint'));
+// mesh.setEndpoint('https://artdev-7hjxg3i-awxnxowa5lur4.eu-4.magentosite.cloud/graphql');
 
 // Set Fetch Headers (Service)
 pkg.setFetchGraphQlHeaders({
@@ -34,10 +41,18 @@ pkg.setFetchGraphQlHeaders({
   'Magento-Store-Code': await getConfigValue('commerce-store-code'),
   'Magento-Customer-Group': await getConfigValue('commerce-customer-group'),
   'x-api-key': await getConfigValue('commerce-x-api-key'),
-});
+}); */
 
 export default function decorate(block) {
   const config = readBlockConfig(block);
+
+  console.log('store pkg', pkg.initializeCart());
+
+  console.log('block config', config);
+  // console.log('store id', pkg.getCartData());
+  console.log('store config', pkg.getConfig());
+  console.log('store config cache', pkg.getCartDataFromCache());
+  console.log('store pkg', pkg);
 
   /*   console.log('dropin cart data', getCartData());
   console.log('dropin store config', getStoreConfig());
