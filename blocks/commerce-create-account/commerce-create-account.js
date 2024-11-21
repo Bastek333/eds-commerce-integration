@@ -1,6 +1,6 @@
 import { render as provider } from '@dropins/storefront-auth/render.js';
-import SignIn from '@dropins/storefront-auth/containers/SignIn.js';
+import SignUp from '@dropins/storefront-auth/containers/SignUp.js';
 
 export default async function decorate(block) {
-  provider.render(SignIn)(block);
+  provider.render(SignUp)(block);
 }
