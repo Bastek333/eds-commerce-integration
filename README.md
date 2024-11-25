@@ -62,3 +62,8 @@ head.html
 </script>
 
 npm outdated - check for new packages (change package number to \* and run npm update --save)
+
+For checkout feature:
+scripts\_\_dropins\_\_\storefront-checkout\fragments.js - needs change from 'id' to 'uid' on 'fragment BILLING_CART_ADDRESS_FRAGMENT on BillingCartAddress' and 'fragment SHIPPING_CART_ADDRESS_FRAGMENT on ShippingCartAddress'
+
+scripts\_\_dropins\_\_\storefront-checkout\fragments.js - 'same_as_billing' don't exist in current beta Magento graphql schema (maybe is on Adobe Magento development branch)
