@@ -26,7 +26,6 @@ type Selection = {
 export interface SwatchesProps extends HTMLAttributes<HTMLDivElement> {
     options: Array<Option>;
     hideSelectedValue?: boolean;
-    disablePreselections?: boolean;
     defaultOptions?: string[];
     selectionsToUpdate?: Option[];
     onValues?: (uids: Selection, current: string) => void;

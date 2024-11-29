@@ -116,8 +116,11 @@ function renderItem(unitId, product) {
 }
 
 function renderItems(block, results) {
+  if (!results) {
+    return;
+  }
   // Render only first recommendation
-  const [recommendation] = results;
+  const [recommendation = ''] = results;
   if (!recommendation) {
     // Hide block content if no recommendations are available
     block.textContent = '';

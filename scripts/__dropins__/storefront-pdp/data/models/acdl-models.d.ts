@@ -31,7 +31,7 @@ export type Product = {
     manufacturer?: string | null;
     countryOfManufacture?: string | null;
     categories?: string[] | null;
-    productType?: ProductType;
+    productType?: string | null;
     pricing?: {
         regularPrice: number;
         minimalPrice?: number;
@@ -47,12 +47,4 @@ export type Product = {
     canonicalUrl?: string | null;
     mainImageUrl?: string | null;
 };
-export declare enum ProductType {
-    ComplexProduct = "complex",
-    SimpleProduct = "simple"
-}
-export declare enum ProductViewType {
-    ComplexProductView = "ComplexProductView",
-    SimpleProductView = "SimpleProductView"
-}
 //# sourceMappingURL=acdl-models.d.ts.map
