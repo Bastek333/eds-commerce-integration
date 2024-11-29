@@ -286,14 +286,12 @@ const e=`
     id
     number
     order_date
-    order_status_change_date
     status
     token
     carrier
     shipping_method
     printed_card_included
     gift_receipt_included
-    available_actions
     is_virtual
     payment_methods {
       name
