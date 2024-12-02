@@ -33,7 +33,7 @@ export function renderAuthDropdown(navTools) {
       <ul class="authenticated-user-menu">
          <li><a href="/customer/account">My Account</a></li>
           <li>
-            <a href="/products/hollister-backyard-sweatshirt/MH05">Product page</a>
+            <a href="/customer/addresses">My Addresses</a></li>
           </li>
           <li><button>Logout</button></li>
       </ul>

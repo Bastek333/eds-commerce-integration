@@ -12,7 +12,7 @@ export default async function decorate(block) {
   try {
     customer = await pkg.getCustomer();
   } catch (error) {
-    console.log('error:', error);
+    console.warn('error:', error);
   }
 
   if (!customer) {

@@ -5,7 +5,7 @@ import ShippingMethods from '@dropins/storefront-checkout/containers/ShippingMet
 export default async function decorate(block) {
   await pkg.initializeCheckout();
 
-  console.log('Decorating checkout block');
+  console.warn('Decorating checkout block');
 
   provider.render(ShippingMethods)(block);
 }

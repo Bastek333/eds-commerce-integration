@@ -270,3 +270,10 @@ export function mapProductAcdl(product) {
     mainImageUrl: product?.images?.[0]?.url,
   };
 }
+
+// Just to fix build exxors with imports in blocks\product-details-custom\product-details-custom.js
+export function getProduct(item) { return item; }
+
+export const refineProductQuery = '';
+
+export const variantsQuery = '';
