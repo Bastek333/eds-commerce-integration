@@ -226,20 +226,25 @@ async function loadRecommendation(block, context, visibility, filters) {
       dl.push({ event: 'recs-api-request-sent', eventInfo: { ...dl.getState() } });
     });
 
-    performCatalogServiceQuery(recommendationsQuery, context).then(({ recommendations }) => {
+    performCatalogServiceQuery(recommendationsQuery, context).then((data) => {
+      if (!data) {
+        console.warn('DATA:', data);
+      }
+      const recommendations = data?.recomendations;
       window.adobeDataLayer.push((dl) => {
-        dl.push({ recommendationsContext: { units: recommendations.results.map(mapUnit) } });
+        dl.push({ recommendationsContext: { units: recommendations?.results.map(mapUnit) } });
         dl.push({ event: 'recs-api-response-received', eventInfo: { ...dl.getState() } });
       });
       resolve(recommendations);
     }).catch((error) => {
-      console.error('Error fetching recommendations', error);
+      console.warn('Error fetching recommendations', error);
       reject(error);
     });
   });
 
-  let { results } = await unitsPromise;
-  results = results.filter((unit) => (filters.typeId ? unit.typeId === filters.typeId : true));
+  const data = await unitsPromise;
+  let results = data?.results;
+  results = results?.filter((unit) => (filters.typeId ? unit.typeId === filters.typeId : true));
 
   renderItems(block, results);
 }

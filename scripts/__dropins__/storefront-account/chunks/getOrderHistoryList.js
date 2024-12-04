@@ -67,7 +67,6 @@ fragment OrderSummary on OrderTotal {
         total_pages
         current_page
       }
-      date_of_first_order
       total_count
       items {
         token
