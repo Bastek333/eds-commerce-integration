@@ -1,6 +1,6 @@
 import {
   h, Component, Fragment,
-} from '../@dropins/tools/preact.js';
+} from '../../scripts/__dropins__/tools/preact.js';
 import htm from '../../scripts/htm.js';
 import Icon from './Icon.js';
 

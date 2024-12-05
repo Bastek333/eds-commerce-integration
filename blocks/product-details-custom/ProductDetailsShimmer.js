@@ -1,6 +1,6 @@
 import {
   h, Fragment,
-} from '../@dropins/tools/preact.js';
+} from '../../scripts/__dropins__/tools/preact.js';
 import htm from '../../scripts/htm.js';
 import Sidebar from './ProductDetailsSidebar.js';
 import Carousel from './ProductDetailsCarousel.js';
