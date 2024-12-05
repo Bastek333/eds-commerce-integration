@@ -84,17 +84,17 @@ export default async function decorate(block) {
 
   // Render Containers
   const [
-    _galleryMobile,
-    _gallery,
-    _header,
-    _price,
-    _shortDescription,
-    _options,
-    _quantity,
+    // _galleryMobile,
+    // _gallery,
+    // _header,
+    // _price,
+    // _shortDescription,
+    // _options,
+    // _quantity,
     addToCart,
     addToWishlist,
-    _description,
-    _attributes,
+    // _description,
+    // _attributes,
   ] = await Promise.all([
     // Gallery (Mobile)
     pdpRendered.render(ProductGallery, {
