@@ -512,7 +512,7 @@ async function fetchPlaceholders(prefix = 'default') {
         })
         .then((json) => {
           const placeholders = {};
-          json.data.forEach(({ Key, Value }) => {
+          json.data.forEach(({ Key, Text }) => {
             if (Key) {
               const keys = Key.split('.');
               const lastKey = keys.pop();
@@ -520,7 +520,7 @@ async function fetchPlaceholders(prefix = 'default') {
                 obj[key] = obj[key] || {};
                 return obj[key];
               }, placeholders);
-              target[lastKey] = Value;
+              target[lastKey] = Text;
             }
           });
           window.placeholders[prefix] = placeholders;

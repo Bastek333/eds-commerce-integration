@@ -72,3 +72,5 @@ scripts\_\_dropins\_\_\storefront-checkout\fragments.js - 'order_status_change_d
 scripts\_\_dropins\_\_\storefront-checkout\fragments.js - 'available_actions' don't exist in current beta Magento graphql schema (maybe is on Adobe Magento development branch)
 
 scripts\_\_dropins\_\_\storefront-account\chunks\getOrderHistoryList.js - 'date_of_first_order' don't exist in current beta Magento graphql schema (maybe is on Adobe Magento development branch)
+
+scripts\_\_dropins\_\_\storefront-order\chunks\transform-order-details.js - 'quantity_return_requested' don't exist in current beta Magento graphql schema (maybe is on Adobe Magento development branch)

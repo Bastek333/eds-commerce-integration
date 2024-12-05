@@ -72,7 +72,6 @@ import{a as z}from"./convertCase.js";const d=`
     quantity_canceled
     quantity_invoiced
     quantity_refunded
-    quantity_return_requested
     product_sale_price {
       value
       currency
