@@ -31,8 +31,11 @@ export function renderAuthDropdown(navTools) {
     <div class="nav-auth-menu-panel nav-tools-panel">
       <div id="auth-dropin-container"></div>
       <ul class="authenticated-user-menu">
-        <li><a href="/customer/account">My Account</a></li>
-        <li><button>Logout</button></li>
+         <li><a href="/customer/account">My Account</a></li>
+          <li>
+            <a href="/products/hollister-backyard-sweatshirt/MH05">Product page</a>
+          </li>
+          <li><button>Logout</button></li>
       </ul>
     </div>
  </div>`);
