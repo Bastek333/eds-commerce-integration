@@ -21,7 +21,7 @@ import ProductAttributes from '@dropins/storefront-pdp/containers/ProductAttribu
 import ProductGallery from '@dropins/storefront-pdp/containers/ProductGallery.js';
 
 // Libs
-import { setJsonLd, loadErrorPage } from '../../scripts/commerce.js';
+import { setJsonLd } from '../../scripts/commerce.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
 
 // Initializers
@@ -32,11 +32,6 @@ export default async function decorate(block) {
   // eslint-disable-next-line no-underscore-dangle
   const product = events._lastEvent?.['pdp/data']?.payload ?? null;
   const labels = await fetchPlaceholders();
-
-  if (!product) {
-    await loadErrorPage();
-    return Promise.reject();
-  }
 
   // Layout
   const fragment = document.createRange().createContextualFragment(`
@@ -84,17 +79,17 @@ export default async function decorate(block) {
 
   // Render Containers
   const [
-    // _galleryMobile,
-    // _gallery,
-    // _header,
-    // _price,
-    // _shortDescription,
-    // _options,
-    // _quantity,
+    _galleryMobile,
+    _gallery,
+    _header,
+    _price,
+    _shortDescription,
+    _options,
+    _quantity,
     addToCart,
     addToWishlist,
-    // _description,
-    // _attributes,
+    _description,
+    _attributes,
   ] = await Promise.all([
     // Gallery (Mobile)
     pdpRendered.render(ProductGallery, {

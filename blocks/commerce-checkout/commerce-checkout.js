@@ -30,9 +30,9 @@ import { render as AccountProvider } from '@dropins/storefront-account/render.js
 // Cart Dropin
 import * as cartApi from '@dropins/storefront-cart/api.js';
 import CartSummaryList from '@dropins/storefront-cart/containers/CartSummaryList.js';
+import Coupons from '@dropins/storefront-cart/containers/Coupons.js';
 import EmptyCart from '@dropins/storefront-cart/containers/EmptyCart.js';
 import OrderSummary from '@dropins/storefront-cart/containers/OrderSummary.js';
-import Coupons from '@dropins/storefront-cart/containers/Coupons.js';
 import { render as CartProvider } from '@dropins/storefront-cart/render.js';
 
 // Checkout Dropin
@@ -41,7 +41,6 @@ import BillToShippingAddress from '@dropins/storefront-checkout/containers/BillT
 import EstimateShipping from '@dropins/storefront-checkout/containers/EstimateShipping.js';
 import LoginForm from '@dropins/storefront-checkout/containers/LoginForm.js';
 import MergedCartBanner from '@dropins/storefront-checkout/containers/MergedCartBanner.js';
-import OrderConfirmationHeader from '@dropins/storefront-checkout/containers/OrderConfirmationHeader.js';
 import OutOfStock from '@dropins/storefront-checkout/containers/OutOfStock.js';
 import PaymentMethods from '@dropins/storefront-checkout/containers/PaymentMethods.js';
 import PlaceOrder from '@dropins/storefront-checkout/containers/PlaceOrder.js';
@@ -54,6 +53,7 @@ import { render as CheckoutProvider } from '@dropins/storefront-checkout/render.
 import * as orderApi from '@dropins/storefront-order/api.js';
 import CustomerDetails from '@dropins/storefront-order/containers/CustomerDetails.js';
 import OrderCostSummary from '@dropins/storefront-order/containers/OrderCostSummary.js';
+import OrderHeader from '@dropins/storefront-order/containers/OrderHeader.js';
 import OrderProductList from '@dropins/storefront-order/containers/OrderProductList.js';
 import OrderStatus from '@dropins/storefront-order/containers/OrderStatus.js';
 import ShippingStatus from '@dropins/storefront-order/containers/ShippingStatus.js';
@@ -65,6 +65,8 @@ import createModal from '../modal/modal.js';
 
 import {
   estimateShippingCost, getCartAddress,
+  isCartEmpty,
+  isCheckoutEmpty,
   scrollToElement,
   setAddressOnCart,
 } from '../../scripts/checkout.js';
@@ -121,9 +123,6 @@ export default async function decorate(block) {
   const BILLING_FORM_NAME = 'selectedBillingAddress';
   const SHIPPING_ADDRESS_DATA_KEY = `${SHIPPING_FORM_NAME}_addressData`;
   const BILLING_ADDRESS_DATA_KEY = `${BILLING_FORM_NAME}_addressData`;
-
-  // Pre-fetch checkout store configuration
-  const storeConfig = await checkoutApi.getStoreConfig();
 
   // Define the Layout for the Checkout
   const checkoutFragment = document.createRange().createContextualFragment(`
@@ -188,48 +187,30 @@ export default async function decorate(block) {
 
   block.appendChild(checkoutFragment);
 
-  // Render main containers
+  // Global state
+  let initialized = false;
+
+  // Container and component references
+  let loader;
+  let modal;
+  let emptyCart;
   let shippingFormRef = { current: null };
   let billingFormRef = { current: null };
+  let shippingForm;
+  let billingForm;
+  let shippingAddresses;
+  let billingAddresses;
 
-  let loader;
-  const displayOverlaySpinner = async () => {
-    if (loader) return;
-
-    loader = await UI.render(ProgressSpinner, {
-      className: '.checkout__overlay-spinner',
-    })($loader);
-  };
-
-  const removeOverlaySpinner = () => {
-    if (!loader) return;
-
-    loader.remove();
-    loader = null;
-    $loader.innerHTML = '';
-  };
-
-  let modal;
-  const showModal = async (content) => {
-    modal = await createModal([content]);
-    modal.showModal();
-  };
-
-  const removeModal = () => {
-    if (!modal) return;
-    modal.removeModal();
-    modal = null;
-  };
-
+  // Render the initial containers
   const [
     _mergedCartBanner,
-    _heading,
+    _header,
     _serverError,
     _outOfStock,
-    _login,
+    _loginForm,
     shippingFormSkeleton,
     _billToShipping,
-    _delivery,
+    _shippingMethods,
     _paymentMethods,
     billingFormSkeleton,
     _orderSummary,
@@ -238,11 +219,7 @@ export default async function decorate(block) {
   ] = await Promise.all([
     CheckoutProvider.render(MergedCartBanner)($mergedCartBanner),
 
-    UI.render(Header, {
-      title: 'Checkout',
-      size: 'large',
-      divider: true,
-    })($heading),
+    UI.render(Header, { title: 'Checkout', size: 'large', divider: true })($heading),
 
     CheckoutProvider.render(ServerError, {
       onRetry: () => {
@@ -296,10 +273,11 @@ export default async function decorate(block) {
         if (!checked && billingFormRef?.current) {
           const { formData, isDataValid } = billingFormRef.current;
 
-          setAddressOnCart(
-            { data: formData, isDataValid },
-            checkoutApi.setBillingAddress,
-          );
+          setAddressOnCart({
+            api: checkoutApi.setBillingAddress,
+            debounceMs: DEBOUNCE_TIME,
+            placeOrderBtn: placeOrder,
+          })({ data: formData, isDataValid });
         }
       },
     })($billToShipping),
@@ -409,22 +387,26 @@ export default async function decorate(block) {
 
         return success;
       },
-      onPlaceOrder: async () => {
+      handlePlaceOrder: async ({ cartId }) => {
         await displayOverlaySpinner();
 
-        try {
-          await checkoutApi.placeOrder();
-        } catch (error) {
-          console.error(error);
-          throw error;
-        } finally {
-          await removeOverlaySpinner();
-        }
+        await orderApi.placeOrder(cartId).finally(removeOverlaySpinner);
       },
     })($placeOrder),
   ]);
 
-  let emptyCart;
+  // Dynamic containers and components
+  const showModal = async (content) => {
+    modal = await createModal([content]);
+    modal.showModal();
+  };
+
+  const removeModal = () => {
+    if (!modal) return;
+    modal.removeModal();
+    modal = null;
+  };
+
   const displayEmptyCart = async () => {
     if (emptyCart) return;
 
@@ -445,8 +427,32 @@ export default async function decorate(block) {
     $content.classList.remove('checkout__content--empty');
   };
 
-  let shippingForm;
-  let billingForm;
+  const displayOverlaySpinner = async () => {
+    if (loader) return;
+
+    loader = await UI.render(ProgressSpinner, {
+      className: '.checkout__overlay-spinner',
+    })($loader);
+  };
+
+  const removeOverlaySpinner = () => {
+    if (!loader) return;
+
+    loader.remove();
+    loader = null;
+    $loader.innerHTML = '';
+  };
+
+  const initializeCheckout = async (data) => {
+    if (initialized) return;
+    removeEmptyCart();
+    if (data.isGuest) await displayGuestAddressForms(data);
+    else {
+      removeOverlaySpinner();
+      await displayCustomerAddressForms(data);
+    }
+  };
+
   const displayGuestAddressForms = async (data) => {
     if (data.isVirtual) {
       shippingForm?.remove();
@@ -478,6 +484,8 @@ export default async function decorate(block) {
         api: checkoutApi.estimateShippingMethods,
         debounceMs: DEBOUNCE_TIME,
       });
+
+      const storeConfig = checkoutApi.getStoreConfigCache();
 
       shippingForm = await AccountProvider.render(AddressForm, {
         addressesFormTitle: 'Shipping address',
@@ -523,6 +531,8 @@ export default async function decorate(block) {
         placeOrderBtn: placeOrder,
       });
 
+      const storeConfig = checkoutApi.getStoreConfigCache();
+
       billingForm = await AccountProvider.render(AddressForm, {
         addressesFormTitle: 'Billing address',
         className: 'checkout-billing-form__address-form',
@@ -545,8 +555,6 @@ export default async function decorate(block) {
     }
   };
 
-  let shippingAddresses;
-  let billingAddresses;
   const displayCustomerAddressForms = async (data) => {
     if (data.isVirtual) {
       shippingAddresses?.remove();
@@ -580,6 +588,8 @@ export default async function decorate(block) {
           isValid: false,
         });
       }
+
+      const storeConfig = checkoutApi.getStoreConfigCache();
 
       const inputsDefaultValueSet = cartShippingAddress && cartShippingAddress.id === undefined
         ? cartShippingAddress
@@ -634,6 +644,8 @@ export default async function decorate(block) {
       if (cartBillingAddress && billingAddressCache) {
         sessionStorage.removeItem(BILLING_ADDRESS_DATA_KEY);
       }
+
+      const storeConfig = checkoutApi.getStoreConfigCache();
 
       const inputsDefaultValueSet = cartBillingAddress && cartBillingAddress.id === undefined
         ? cartBillingAddress
@@ -719,7 +731,7 @@ export default async function decorate(block) {
 
     block.replaceChildren(orderConfirmationFragment);
 
-    const onSignUpClick = async ({ inputsDefaultValueSet, addressesData }) => {
+    const handleSignUpClick = async ({ inputsDefaultValueSet, addressesData }) => {
       const signUpForm = document.createElement('div');
       AuthProvider.render(SignUp, {
         routeSignIn: () => '/customer/login',
@@ -731,9 +743,10 @@ export default async function decorate(block) {
       await showModal(signUpForm);
     };
 
-    CheckoutProvider.render(OrderConfirmationHeader, {
+    OrderProvider.render(OrderHeader, {
+      handleEmailAvailability: checkoutApi.isEmailAvailable,
+      handleSignUpClick,
       orderData,
-      onSignUpClick,
     })($orderConfirmationHeader);
 
     OrderProvider.render(OrderStatus, { slots: { OrderActions: () => null } })(
@@ -776,33 +789,21 @@ export default async function decorate(block) {
     })($orderConfirmationFooterContinueBtn);
   };
 
-  // Event handlers
-  const handleCheckoutInitialized = async (data) => {
-    if (data === null || data.isEmpty) {
-      await displayEmptyCart();
-      return;
-    }
+  // Define the event handlers
+  const handleCartInitialized = async (data) => {
+    if (isCartEmpty(data)) await displayEmptyCart();
+  };
 
-    if (data.isGuest) {
-      await displayGuestAddressForms(data);
-    } else {
-      await displayCustomerAddressForms(data);
-    }
+  const handleCheckoutInitialized = async (data) => {
+    if (!data || isCheckoutEmpty(data)) return;
+    initializeCheckout(data);
   };
 
   const handleCheckoutUpdated = async (data) => {
-    if (data === null || data.isEmpty) {
+    if (isCheckoutEmpty(data)) {
       await displayEmptyCart();
-      return;
-    }
-
-    removeEmptyCart();
-
-    if (data.isGuest) {
-      await displayGuestAddressForms(data);
-    } else {
-      await removeOverlaySpinner();
-      await displayCustomerAddressForms(data);
+    } else if (!initialized) {
+      await initializeCheckout(data);
     }
   };
 
@@ -811,7 +812,7 @@ export default async function decorate(block) {
     removeModal();
   };
 
-  const handleCheckoutOrder = async (orderData) => {
+  const handleOrderPlaced = async (orderData) => {
     // Clear address form data
     sessionStorage.removeItem(SHIPPING_ADDRESS_DATA_KEY);
     sessionStorage.removeItem(BILLING_ADDRESS_DATA_KEY);
@@ -833,7 +834,8 @@ export default async function decorate(block) {
   };
 
   events.on('authenticated', handleAuthenticated);
+  events.on('cart/initialized', handleCartInitialized, { eager: true });
   events.on('checkout/initialized', handleCheckoutInitialized, { eager: true });
-  events.on('checkout/order', handleCheckoutOrder);
   events.on('checkout/updated', handleCheckoutUpdated);
+  events.on('order/placed', handleOrderPlaced);
 }

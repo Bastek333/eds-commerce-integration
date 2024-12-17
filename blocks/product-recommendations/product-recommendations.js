@@ -66,7 +66,9 @@ function renderPlaceholder(block) {
 
 function renderItem(unitId, product) {
   let image = product.images[0]?.url;
-  image = image.replace('http://', '//');
+  if (image) {
+    image = image.replace('http://', '//');
+  }
 
   const clickHandler = () => {
     window.adobeDataLayer.push((dl) => {
@@ -100,7 +102,7 @@ function renderItem(unitId, product) {
     <a href="/products/${product.urlKey}/${product.sku}">
       <picture>
         <source type="image/webp" srcset="${image}?width=300&format=webply&optimize=medium" />
-        <img loading="lazy" alt="${product.name}" width="300" height="375" src="${image}?width=300&format=jpg&optimize=medium" />
+        <img loading="lazy" alt="Image of ${product.name}" width="300" height="375" src="${image}?width=300&format=jpg&optimize=medium" />
       </picture>
       <span>${product.name}</span>
     </a>
@@ -116,11 +118,8 @@ function renderItem(unitId, product) {
 }
 
 function renderItems(block, results) {
-  if (!results) {
-    return;
-  }
   // Render only first recommendation
-  const [recommendation = ''] = results;
+  const [recommendation] = results;
   if (!recommendation) {
     // Hide block content if no recommendations are available
     block.textContent = '';
@@ -226,25 +225,20 @@ async function loadRecommendation(block, context, visibility, filters) {
       dl.push({ event: 'recs-api-request-sent', eventInfo: { ...dl.getState() } });
     });
 
-    performCatalogServiceQuery(recommendationsQuery, context).then((data) => {
-      if (!data) {
-        console.warn('DATA:', data);
-      }
-      const recommendations = data?.recomendations;
+    performCatalogServiceQuery(recommendationsQuery, context).then(({ recommendations }) => {
       window.adobeDataLayer.push((dl) => {
-        dl.push({ recommendationsContext: { units: recommendations?.results.map(mapUnit) } });
+        dl.push({ recommendationsContext: { units: recommendations.results.map(mapUnit) } });
         dl.push({ event: 'recs-api-response-received', eventInfo: { ...dl.getState() } });
       });
       resolve(recommendations);
     }).catch((error) => {
-      console.warn('Error fetching recommendations', error);
+      console.error('Error fetching recommendations', error);
       reject(error);
     });
   });
 
-  const data = await unitsPromise;
-  let results = data?.results;
-  results = results?.filter((unit) => (filters.typeId ? unit.typeId === filters.typeId : true));
+  let { results } = await unitsPromise;
+  results = results.filter((unit) => (filters.typeId ? unit.typeId === filters.typeId : true));
 
   renderItems(block, results);
 }

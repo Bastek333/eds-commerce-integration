@@ -165,7 +165,7 @@ const onHeaderLinkClick = () => {
   })(signInForm);
 };
 
-const renderAuthCombine = (navSections) => {
+const renderAuthCombine = (navSections, toggleMenu) => {
   if (getCookie('auth_dropin_firstname')) return;
 
   const navListEl = navSections.querySelector('.default-content-wrapper > ul');
@@ -176,7 +176,10 @@ const renderAuthCombine = (navSections) => {
   const authCombineLink = accountLiItems[accountLiItems.length - 1];
 
   authCombineLink.classList.add('authCombineNavElement');
-  authCombineLink.addEventListener('click', () => {
+  const text = authCombineLink.textContent || '';
+  authCombineLink.innerHTML = `<a href="#">${text}</a>`;
+  authCombineLink.addEventListener('click', (event) => {
+    event.preventDefault();
     onHeaderLinkClick();
 
     function getPopupElements() {
@@ -213,11 +216,14 @@ const renderAuthCombine = (navSections) => {
           'afterend',
           `<ul class="popupMenuUrlList">
               <li><a href={CUSTOMER_ACCOUNT_PATH}>My Account</a></li>
+              <li><a href="/products/hollister-backyard-sweatshirt/MH05">Product page</a></li>
               <li><button class="logoutButton">Logout</button></li>
             </ul>`,
         );
       }
     });
+
+    toggleMenu?.();
   });
 };
 

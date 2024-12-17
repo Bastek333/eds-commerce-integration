@@ -212,6 +212,10 @@ export async function loadErrorPage(code = 404) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlText, 'text/html');
   document.body.innerHTML = doc.body.innerHTML;
+  // get dropin styles
+  document.head.querySelectorAll('style[data-dropin]').forEach((style) => {
+    doc.head.appendChild(style);
+  });
   document.head.innerHTML = doc.head.innerHTML;
 
   // https://developers.google.com/search/docs/crawling-indexing/javascript/fix-search-javascript
@@ -270,10 +274,3 @@ export function mapProductAcdl(product) {
     mainImageUrl: product?.images?.[0]?.url,
   };
 }
-
-// Just to fix build exxors with imports in blocks\product-details-custom\product-details-custom.js
-export function getProduct(item) { return item; }
-
-export const refineProductQuery = '';
-
-export const variantsQuery = '';
