@@ -68,6 +68,21 @@ https://experienceleague.adobe.com/developer/commerce/storefront/discovery/archi
 
 To use dropiins Magento version should be at least 2.4.7
 
+Magento2 composer requirements for EDS compatibility:
+"adobe-commerce/storefront-compatibility": "^4.7",
+"graycore/magento2-cors": "^2.1",
+"magento/catalog-service": "^3.1",
+"magento/composer-root-update-plugin": "^2.0.4",
+"magento/experience-platform-connector": "^3.2",
+"magento/live-search": "^4.2.1",
+"magento/magento-cloud-metapackage": "2.4.8-p1",
+"magento/module-data-services-graphql": "^1.2",
+"magento/module-page-builder-product-recommendations": "^6.0",
+"magento/module-visual-product-recommendations": "^6.0",
+"magento/product-enterprise-edition": "2.4.8-beta1",
+"magento/product-recommendations": "^6.0.3",
+"markshust/magento2-module-disabletwofactorauth": "^2.0.2"
+
 npm outdated - check for new packages (change package number to \* and run npm update --save)
 
 ## Old findings - now included in Adobe master branch
