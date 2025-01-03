@@ -61,6 +61,11 @@ https://github.com/hlxsites/aem-boilerplate-commerce/issues?q=label%3Achangelog+
 
 ## SII research
 
+Google drive project included in googleDrive folder
+
+Demo project available on:
+https://main--eds-commerce-integration--bastek333.aem.page/
+
 To use all Storefront capabilities with graphQL calls Adobe Compatybility package have to be installed:
 https://experienceleague.adobe.com/developer/commerce/storefront/setup/storefront-compatibility/
 
